@@ -1,4 +1,4 @@
-# math/case
+# match/case
 
 def calculate(a, b, operation) -> int | str:
     match operation:
