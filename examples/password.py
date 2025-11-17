@@ -18,7 +18,7 @@ def strength_password(value: str) -> tuple[str, list[str]]:
         return "Сильный пароль", []
 
 
-if __name__ == "__main__":
+def run():
     print("Требования к паролю: не менее 8 символов, хотя бы одна цифра, строчные и заглавные буквы, специальный символ.")
     while True:
         pwd = input("Введите пароль для проверки (для выхода введите 'exit'): ")
@@ -37,3 +37,5 @@ if __name__ == "__main__":
 
         print("Пароль принят.")
         break
+
+run()
