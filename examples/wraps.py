@@ -11,6 +11,8 @@ def log(message: str):
         return wrapper
     return decorator
 
+
+@log("Функция запускается!")
 def hello(name: str):
     print(f"Привет, {name}!")
 
