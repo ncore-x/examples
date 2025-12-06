@@ -2,14 +2,21 @@ from contextlib import contextmanager
 import time
 from typing import Callable
 from functools import wraps
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(level)s - %(message)s"
+)
 
 # log
-def log(message: str):
+
+
+def messages_deco(message: str):
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"[LOG] {message}")
+            logging.info(f"[LOG] {message}")
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -17,18 +24,19 @@ def log(message: str):
 # timeit
 
 
-def timeit(unit="seconds"):
+def timeit_deco(unit="seconds"):
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
             start = time.time()
-            result = func(*args, **kwargs)
+            res = func(*args, **kwargs)
             end = time.time()
             time_stant = end - start
             if unit == "milliseconds":
                 time_stant *= 1000
-            print(f"{func.__name__} executed in {time_stant} {unit}s")
-            return result
+            logging.info(
+                f"Результат выполнения функции {func.__name__} заняло {time_stant:.4f} {unit}")
+            return res
         return wrapper
     return decorator
 
@@ -50,9 +58,9 @@ def retry(attempts=3, delay=2):
             raise last_exc
         return wrapper
     return decorator
-
-
 # cache
+
+
 def cache_results(max_size: int = 128):
     def decorator(func: Callable):
         cache = {}
@@ -78,10 +86,10 @@ def cache_results(max_size: int = 128):
     return decorator
 
 
-@log("ВЫВОД РЕЗУЛЬТАТА ДЕЛЕНИЯ")
+@messages_deco("ВЫВОД РЕЗУЛЬТАТА ДЕЛЕНИЯ")
 @cache_results(max_size=5)
 @retry(attempts=3, delay=2)
-@timeit(unit="milliseconds")
+@timeit_deco(unit="milliseconds")
 def divide(a, b):
     if a == 0 or b == 0:
         raise ZeroDivisionError
